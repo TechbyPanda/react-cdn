@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- React CDN links -->
+    <script src="https://unpkg.com/react@16.8.6/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16.8.6/umd/react-dom.production.min.js"></script>
+
+    <script>
+      // JSON data for the element
+      const jsonData = {
+        type: "div",
+        props: {
+          id: "container",
+          class: "container",
+          children: [
+            {
+              type: "h1",
+              children: "Title",
+            },
+            {
+              type: "p",
+              children: "Paragraph",
+            },
+            {
+              type: "div",
+              children: [
+                {
+                  type: "div",
+                  children: "div1",
+                },
+                {
+                  type: "div",
+                  children: "div2",
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      function renderElement(data) {
+        if (Array.isArray(data)) {
+          return data.map((element) => {
+            if (Array.isArray(element.children)) {
+              // Recursively render child elements
+              const children = renderElement(element.children);
+              return React.createElement(
+                element.type,
+                { key: element.type },
+                children
+              );
+            } else {
+              return React.createElement(
+                element.type,
+                { key: element.type },
+                element.children
+              );
+            }
+          });
+        } else {
+          return data;
+        }
+      }
+
+      let children = renderElement(jsonData.props.children);
+      let element = React.createElement(
+        jsonData.type,
+        {
+          id: jsonData.props.id,
+          class: jsonData.props.class,
+        },
+        children
+      );
+      renderElement(jsonData);
+      ReactDOM.render(element, document.getElementById("root"));
+    </script>
+  </body>
+</html>
